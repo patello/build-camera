@@ -11,10 +11,10 @@ COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt
 
 # Copy the python script to the container
-COPY image-download.py /root/image-download.py
+COPY image_download.py /root/image_download.py
  
 # Give execution rights to the python script
-RUN chmod 0644 /root/image-download.py
+RUN chmod 0644 /root/image_download.py
 
 # Set the timezone to Europe/Stockholm
 ENV TZ=Europe/Stockholm
@@ -22,13 +22,13 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get install -y tzdata
 
 # Add the cron job to run the python script every day at 12:00
-RUN crontab -l | { cat; echo "0 12 * * * python3 /root/image-download.py"; } | crontab -
+RUN crontab -l | { cat; echo "0 12 * * * python3 /root/image_download.py"; } | crontab -
  
 # Create a volume to store the images
 VOLUME /images
  
 # Modify the python script to save the images to the volume
-RUN sed -i 's/date + ".jpg"/"\/images\/" + date + ".jpg"/g' /root/image-download.py
+RUN sed -i 's/date + ".jpg"/"\/images\/" + date + ".jpg"/g' /root/image_download.py
  
 # Run the cron service in the foreground
 CMD ["cron", "-f"]
