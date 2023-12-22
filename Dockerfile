@@ -1,9 +1,6 @@
 # Use ubuntu as the base image
 FROM ubuntu:latest
 
-#Select wether to use similarity score or not
-ARG similar=false
-
 # Install python, cron and libgl1-mesa-glx, libglib2 and cmake
 RUN apt-get update && apt-get -y install python3 python3-pip cron libgl1-mesa-glx libglib2.0-0 cmake
 
@@ -24,6 +21,8 @@ RUN chmod 0644 /image_download.py
 ENV TZ=Europe/Stockholm
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get install -y tzdata
+#Select wether to use similarity score or not
+ARG similar=false
 
 # Add the cron job to run the python script at 12 every day if similar is false, otherwise run every 10 minutes between 11 and 13 with the --similar flag
 RUN if [ "$similar" = "false" ] ; then crontab -l | { cat; echo "0 12 * * * python3 /image_download.py >> /images/image_download.log 2>&1"; } | crontab - ; else crontab -l | { cat; echo "*/10 11-13 * * * python3 /image_download.py --similar >> /images/image_download.log 2>&1"; } | crontab - ; fi
