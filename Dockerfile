@@ -20,7 +20,8 @@ RUN chmod 0644 /image_download.py
 # Set the timezone to Europe/Stockholm
 ENV TZ=Europe/Stockholm
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-RUN apt-get install -y tzdata
+RUN apt-get update && apt-get install -y tzdata
+
 #Select wether to use similarity score or not
 ARG similar=false
 
