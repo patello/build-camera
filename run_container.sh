@@ -17,7 +17,7 @@ else
 fi
 
 # Stop all containers called $container_name
-docker stop $(docker ps -a -q --filter name=$container_name)
+docker stop $(docker ps -a -q --filter ancestor=$docker_image)
 
 # Get the directory path of the script
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
