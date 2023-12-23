@@ -1,9 +1,14 @@
 #!/bin/bash
 
-# Check if the first argument is "similar"
+# Check if the first argument is "similar" to run the similar images container
+# or if it is empty to run the normal images container
+# If the first argument is not empty and not "similar" then exit with an error
 similar=false
 if [ "$1" = "--similar" ]; then
     similar=true
+elif [ -n "$1" ]; then
+    echo "Unknown flag: $1"
+    exit 1
 fi
 
 if [ "$similar" = true ]; then
