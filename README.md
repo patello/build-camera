@@ -59,7 +59,7 @@ Thank you for your support and happy coding!
 
 Please make sure that you are allowed to download images from the webcam you are using. The author of this project is not responsible for any legal issues that may arise from the use of this project. The url used in the example script is only for demonstration purposes and should not be used without permission.
 
-The code in this project is licensed under the MIT License. See [LICENSE](https://opensource.org/license/mit/)e for details.
+The code in this project is licensed under the MIT License. See [LICENSE](LICENSE) file for details.
 
 Please note that this project uses other libraries. The licenses for these libraries are as follows:
 
