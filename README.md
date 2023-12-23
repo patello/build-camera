@@ -15,7 +15,7 @@ Optionally, you can set the script to compare the current image to the last imag
 
 ## Installation
 
-# Opt1. Python and ffmpeg installation
+### Opt1. Python and ffmpeg installation
 1. Install Python: Make sure you have Python installed on your system. You can download it from the official website: [https://www.python.org/downloads/](https://www.python.org/downloads/)
 2. Install ffmpeg: ffmpeg is required for generating the timelapse video. You can download it from the official website: [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)
 3. Clone the repository: Clone the repository that contains the `image_download.py`, `generate_timelapse.sh` and `requirements.txt` files.
@@ -24,7 +24,7 @@ pip install -r requirements.txt
 5. Execute the scripts: You can now execute `image_download.py` and `generate_timelapse.sh` scripts as per your requirements.
 6. For best result, put the scripts into a crontab to execute on a schedule.
 
-# Opt2. Docker installation
+### Opt2. Docker installation
 1. Install Docker: Docker is required to build and run the Dockerfile. You can download Docker from the official website: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
 2. Clone the repository: Clone the repository that contains the `Dockerfile` and `run_container.sh` files.
 3. Build the Docker image: Navigate to the directory containing the `Dockerfile` and run the following command to build the Docker image:
