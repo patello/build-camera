@@ -27,7 +27,13 @@ ARG similar=false
 
 # Add the cron job to run the python script at 12 every day if similar is false, otherwise run every 10 minutes between 11 and 13 with the --similar flag
 RUN if [ "$similar" = "false" ] ; then crontab -l | { cat; echo "0 12 * * * python3 /image_download.py >> /images/image_download.log 2>&1"; } | crontab - ; else crontab -l | { cat; echo "*/10 11-13 * * * python3 /image_download.py --similar >> /images/image_download.log 2>&1"; } | crontab - ; fi
- 
+
+#Copy the ffmpeg script to the container
+COPY generate_timelapse.sh /generate_timelapse.sh
+
+# Add the cron job to run ffmpeg at 13 every day
+RUN crontab -l | { cat; echo "0 13 * * * /generate_timelapse.sh images >> /images/generate_timelapse.log 2>&1"; } | crontab -
+
 # Create a volume to store the images
 VOLUME /images
  
