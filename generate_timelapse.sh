@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/bin/bash
 
 folder_path="$1"
 
