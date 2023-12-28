@@ -2,7 +2,7 @@
 FROM ubuntu:latest
 
 # Install python, cron and libgl1-mesa-glx, libglib2 and cmake
-RUN apt-get update && apt-get -y install python3 python3-pip cron libgl1-mesa-glx libglib2.0-0 cmake
+RUN apt-get update && apt-get -y install python3 python3-pip cron libgl1-mesa-glx libglib2.0-0 cmake ffmpeg
 
 # Copy the requirements.txt file into the image
 COPY requirements.txt /tmp/requirements.txt
