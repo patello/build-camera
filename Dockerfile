@@ -32,7 +32,7 @@ RUN if [ "$similar" = "false" ] ; then crontab -l | { cat; echo "0 12 * * * pyth
 COPY generate_timelapse.sh /generate_timelapse.sh
 
 # Add the cron job to run ffmpeg at 13 every day
-RUN crontab -l | { cat; echo "0 13 * * * /generate_timelapse.sh images >> /images/generate_timelapse.log 2>&1"; } | crontab -
+RUN crontab -l | { cat; echo "0 13 * * * /generate_timelapse.sh /images >> /images/generate_timelapse.log 2>&1"; } | crontab -
 
 # Create a volume to store the images
 VOLUME /images
