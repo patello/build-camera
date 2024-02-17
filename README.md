@@ -26,13 +26,14 @@ pip install -r requirements.txt
 
 ### Opt2. Docker installation
 1. Install Docker: Docker is required to build and run the Dockerfile. You can download Docker from the official website: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
-2. Clone the repository: Clone the repository that contains the `Dockerfile` and `run_container.sh` files.
 3. Build the Docker image: Navigate to the directory containing the `Dockerfile` and run the following command to build the Docker image:
-docker build -t your_image_name .
-
-Alternatively, the image will be built automatically when running run_container.sh in step 4, if it doesn't already exists.
+	
+	docker build -t your_image_name .
+	
+	Alternatively, the image will be built automatically when running run_container.sh in step 4, if it doesn't already exists.
 4. Run the Docker container: After the Docker image has been built, you can run it using the following command:
-./run_container.sh
+
+  ./run_container.sh
 
 ## Usage
 
