@@ -51,8 +51,8 @@ docker stop $container_name
 # /dev/null is used to suppress the output of the cd command
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# Rebuild the Docker image if the --rebuild flag is set
-if [ "$rebuild" = true ]; then
+# Rebuild the Docker image if the --rebuild flag is set or if the image doesn't exist
+if [ "$rebuild" = true ] || [ "$(docker images -q $docker_image 2> /dev/null)" = "" ]; then
     docker build --build-arg similar=$similar -t $docker_image $DIR
 fi
 
