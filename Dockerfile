@@ -12,10 +12,7 @@ COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt
 
 # Copy the python script to the container
-COPY image_download.py /image_download.py
- 
-# Give execution rights to the python script
-RUN chmod 0644 /image_download.py
+COPY image_download.py /image_download.py 
 
 # Set the timezone to Europe/Stockholm
 ENV TZ=Europe/Stockholm
