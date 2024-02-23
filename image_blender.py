@@ -1,6 +1,7 @@
 import os
 import cv2
 import logging
+import sys
 
 import numpy as np
 
@@ -45,37 +46,61 @@ def weighted_moving_average(image_paths: list, output_folder: str, weights: list
         # Add the image to the buffer
         image_buffer.append(image)
 
-        # If the buffer is too large, remove the oldest image
-        if len(image_buffer) > len(weights):
+        # If buffer is filled, do a weighted moving average, otherwise skip to the next image
+        if len(image_buffer) < len(weights):
+            continue
+        else:
+            # Apply the weighted moving average
+            weighted_average = np.zeros_like(image, dtype=np.float32)
+            total_weight = 0
+
+            for i, weight in enumerate(weights[-len(image_buffer):]):
+                # Accumulate the weighted average
+                weighted_average += weight * image_buffer[i]
+                total_weight += weight
+
+            weighted_average /= total_weight
+
+            # Save the resulting image
+            image_name = os.path.basename(image_file)
+            output_path = os.path.join(output_folder, image_name)
+            cv2.imwrite(output_path, weighted_average)
+            logging.debug(f"Weighted moving average image saved: {output_path}")
+
+            # Remove the oldest image from the buffer
             image_buffer.pop(0)
-        logging.debug(f"Buffer size for averaging: {len(image_buffer)}")
-
-        # Apply the weighted moving average
-        weighted_average = np.zeros_like(image, dtype=np.float32)
-        total_weight = 0
-
-        for i, weight in enumerate(weights[-len(image_buffer):]):
-            # Accumulate the weighted average
-            weighted_average += weight * image_buffer[i]
-            total_weight += weight
-
-        weighted_average /= total_weight
-
-        # Save the resulting image
-        image_name = os.path.basename(image_file)
-        output_path = os.path.join(output_folder, image_name)
-        cv2.imwrite(output_path, weighted_average)
-        logging.debug(f"Weighted moving average image saved: {output_path}")
-
-    logging.info(f"{len(images)} images processed and saved in {output_folder}.")
+        logging.info(f"{len(images)} images processed and saved in {output_folder}.")
 
 if __name__ == "__main__":
-    # Example parameters, weights are from oldest to newest
-    images_folder = 'similar_images'
-    output_folder = 'test'
+    # Example weights, weights are from oldest to newest
     weights = [0.1, 0.2, 0.3, 0.4]
+
+    # Get input and output folders from command line arguments
+    if len(sys.argv) > 2:
+        images_folder = sys.argv[1]
+        output_folder = sys.argv[2]
+        # Sanity check that input and output folders are different
+        if images_folder == output_folder:
+            raise ValueError("Input and output folders must be different.")
+    else:
+        raise ValueError("Please provide input and output folders as command line arguments.")
 
     # Get the list of image files in the input folder
     images = get_images(images_folder)
+
+    # Get list of existing base names of images in the output folder
+    existing_images = [os.path.basename(image) for image in get_images(output_folder)]
+
+    # Get indices of images that not already processed, remove indices from the list of images except
+    # for the number of images prior to the existing ones equal to the lenght of the weights. Then
+    # remove the images that are already processed based on the indices.
+    indices = [i for i, image in enumerate(images) if os.path.basename(image) not in existing_images]
+    if len(indices) > 0:
+        indices = list(range(max(0, indices[0]-len(weights)+1), indices[0])) + indices
+        images = [images[i] for i in indices]
+    else:
+        logging.info(f"All images in {images_folder} are already processed.")
+        sys.exit()
+
     # Apply the weighted moving average, also save the resulting images in the output folder
     weighted_moving_average(images, output_folder, weights)
