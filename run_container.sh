@@ -2,18 +2,24 @@
 
 # Initialize flags
 similar=false
+blend=false
 rebuild=false
 
 # This loop iterates over all arguments passed to the script. For each argument, it checks if it matches a predefined flag.
 # If it does, it sets the corresponding flag to true and removes the argument from the list of arguments using shift.
 
 # --similar: Checks similarity between images and stores the one with the highest similarity
+# --blend: Blends the images in the input path before generating the timelapse video
 # --rebuild: Rebuilds the Docker image before running the container
 for arg in "$@"
 do
     case $arg in
         --similar)
             similar=true
+            shift
+            ;;
+        --blend)
+            blend=true
             shift
             ;;
         --rebuild)
@@ -53,7 +59,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Rebuild the Docker image if the --rebuild flag is set or if the image doesn't exist
 if [ "$rebuild" = true ] || [ "$(docker images -q $docker_image 2> /dev/null)" = "" ]; then
-    docker build --build-arg similar=$similar -t $docker_image $DIR
+    docker build --build-arg similar=$similar --build-arg blend=$blend -t $docker_image $DIR
 fi
 
 # Start a new container from the image

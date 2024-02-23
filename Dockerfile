@@ -18,7 +18,7 @@ RUN pip3 install -r /tmp/requirements.txt
 # Copy the python script to the container
 COPY image_download.py /image_download.py 
 
-#Select wether to use similarity score or not
+# Select wether to use similarity score or not
 ARG similar=false
 
 # Add the cron job to run the python script at 12 every day if similar is false, otherwise run every 10 minutes between 11 and 13 with the --similar flag
@@ -27,8 +27,11 @@ RUN if [ "$similar" = "false" ] ; then crontab -l | { cat; echo "0 12 * * * pyth
 #Copy the ffmpeg script to the container
 COPY generate_timelapse.sh /generate_timelapse.sh
 
-# Add the cron job to run ffmpeg at 13 every day
-RUN crontab -l | { cat; echo "0 13 * * * /generate_timelapse.sh /images >> /images/generate_timelapse.log 2>&1"; } | crontab -
+# Select wether to blend the images or not
+ARG blend=false
+
+# Add the cron job to run ffmpeg at 13 every day, blending the images if blend is true
+RUN if [ "$blend" = "false" ] ; then crontab -l | { cat; echo "0 13 * * * /generate_timelapse.sh /images /images/out.mp4 >> /images/generate_timelapse.log 2>&1"; } | crontab - ; else crontab -l | { cat; echo "0 13 * * * /generate_timelapse.sh /images /images/out.mp4 --blend >> /images/generate_timelapse.log 2>&1"; } | crontab - ; fi
 
 # Create a volume to store the images
 VOLUME /images
