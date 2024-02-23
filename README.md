@@ -30,19 +30,36 @@ pip install -r requirements.txt
 3. Build the Docker image: Navigate to the directory containing the `Dockerfile` and run the following command to build the Docker image:
 	
 	docker build -t your_image_name .
+
+  The following build arguments can be used to customize the Docker image:
+  - similar (bool): Images will be compared before downloading to minimize differences between consecutive downloads.
+  - blend (bool): Images will be blended before generating the timelapse video.
 	
 	Alternatively, the image will be built automatically when running run_container.sh in step 4, if it doesn't already exists.
 4. Run the Docker container: After the Docker image has been built, you can run it using the following command:
 
   ./run_container.sh
 
+  The following flags can be used to customize the Docker container:
+  --similar: Images will be compared before downloading to minimize differences between consecutive downloads.
+  --blend: Images will be blended before generating the timelapse video.
+  --rebuilt: The Docker image will forced to be rebuilt before running the container.
+
 ## Usage
 
+### Image Download
 Modify the url varible in the image_download.py script to the url of the webcam you want to download images from. You can also modify the output directory and the filename of the downloaded images.
 
 You can call the image_download.py script with the --similar flag to enable image comparison between the current image and the last downloaded image. This flag helps to minimize differences between consecutive downloads resulting in a smoother timelapse video.
 
 Similarly, you can build the Dockerfile with the --similar flag to include the necessary configurations for image comparison in the Docker image.
+
+### Timelapse Generation
+You can use the image_blender.py script to merge two or more images together. This can be useful to create a smoother timelapse video by blending the current image with the last image. You can also use this script to blend two images together to create a composite image. It is called with two arguments, the input image folder and an output folder. The weights for blending the images are currently hard coded in the script and can be modified as per your requirements.
+
+The generate_timelapse.sh script is used to generate the timelapse video from the downloaded images. You can modify the input and output file paths as per your requirements. When using the --blend flag, the script will use the image_blender.py script to blend the images before generating the timelapse video.
+
+The Dockerfile can be built with the --blend flag to automatically run image_blender.py before generating the timelapse video.
 
 ## Contributing
 
@@ -69,8 +86,10 @@ Please note that this project uses other libraries. The licenses for these libra
 
 - Docker: Docker Engine software is released under the Apache 2.0 license.
 - ffmpeg: ffmpeg is licensed under the LGPLv2.1 license.
+- OpenCV: OpenCV 4.5.0 and higher are licensed under the Apache License 2.0.
 - Libraries in `requirements.txt`:
   - requests: Apache License 2.0
+  - opencv-python: Apache License 2.0
 
 Please respect the licenses for these libraries when using this project.
 
