@@ -4,20 +4,19 @@ FROM ubuntu:latest
 # Install python, cron and libgl1-mesa-glx, libglib2 and cmake
 RUN apt-get update && apt-get -y install python3 python3-pip cron libgl1-mesa-glx libglib2.0-0 cmake ffmpeg
 
+# Set the timezone to Europe/Stockholm
+ENV TZ=Europe/Stockholm
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt-get update && apt-get install -y tzdata
+
 # Copy the requirements.txt file into the image
 COPY requirements.txt /tmp/requirements.txt
-
 
 # Install the required modules from the requirements.txt file
 RUN pip3 install -r /tmp/requirements.txt
 
 # Copy the python script to the container
 COPY image_download.py /image_download.py 
-
-# Set the timezone to Europe/Stockholm
-ENV TZ=Europe/Stockholm
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-RUN apt-get update && apt-get install -y tzdata
 
 #Select wether to use similarity score or not
 ARG similar=false
