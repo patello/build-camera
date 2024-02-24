@@ -15,8 +15,9 @@ COPY requirements.txt /tmp/requirements.txt
 # Install the required modules from the requirements.txt file
 RUN pip3 install -r /tmp/requirements.txt
 
-# Copy the python script to the container
+# Copy the python scripts to the container
 COPY image_download.py /image_download.py 
+COPY image_blender.py /image_blender.py
 
 # Select wether to use similarity score or not
 ARG similar=false
