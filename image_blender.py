@@ -93,8 +93,11 @@ if __name__ == "__main__":
 
     # Get indices of images that not already processed, remove indices from the list of images except
     # for the number of images prior to the existing ones equal to the lenght of the weights. Then
-    # remove the images that are already processed based on the indices.
+    # remove the images that are already processed based on the indices. Also remove the indices lower 
+    # than the number of weights since they are not processed because there doesn't exist enough prior
+    # images to apply the weighted moving average on them.
     indices = [i for i, image in enumerate(images) if os.path.basename(image) not in existing_images]
+    indices = [i for i in indices if i >= len(weights)]
     if len(indices) > 0:
         indices = list(range(max(0, indices[0]-len(weights)+1), indices[0])) + indices
         images = [images[i] for i in indices]
