@@ -18,18 +18,25 @@ dir = "./images/"
 
 #Get latest image
 def get_image():
+  # Define expected content-types
+  expected_content_types = ["image/jpeg", "image/png"]
   try:
     # Get the image content from the url
     response = requests.get(url)
-    # Check if the response is successful
+    # Check if the response is successful and that it returned an image
     if response.status_code == 200:
-      return response.content
+      if response.headers["content-type"] in expected_content_types:
+        return response.content
+      else:
+        # Raise and error with the content type
+        raise requests.exceptions.RequestException(f"Content is not an image ({response.headers['content-type']})")
     else:
-      # Log an error message with the status code
-      logging.error(f"Image could not be retrieved: {response.status_code}")
+      # Raise and error with the status code
+      raise requests.exceptions.RequestException(f"Request failed with status code ({response.status_code})")
   except requests.exceptions.RequestException as e:
     # Log an error message with the exception
     logging.error(f"Image could not be requested: {e}")
+    raise e
 
 #Get store image
 def store_image():
