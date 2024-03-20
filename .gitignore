@@ -1,3 +1,7 @@
+# vscode
+.vscode
+
+# Ignore output directories
 /images/*
 /similar_images/*
 /blended_images/*
